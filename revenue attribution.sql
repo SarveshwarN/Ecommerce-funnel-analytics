@@ -102,6 +102,9 @@ GROUP BY
     ELSE 'MAPPED_PRODUCT'
   END;
 
+
+
+#Ranks days by revenue. Computes how much revenue is driven by the top 20% of days. Measures temporal revenue concentration.
 WITH d AS (
   SELECT
     order_date,
@@ -126,8 +129,12 @@ SELECT
     2
   ) AS top_20pct_days_revenue_share
 FROM top_days;
+#Business insights
+#High concentration means revenue depends heavily on campaign or spike days.
+#Business action
+#concentration is high: reduce dependence on spikes by improving baseline conversion.
 
-
+#Joins revenue KPIs with funnel conversion. Shows whether revenue changes are driven by traffic,conversion, order value (AOV).
 WITH kpi AS (
   SELECT
     order_date,
@@ -160,5 +167,13 @@ FROM kpi k
 LEFT JOIN cvr c
   ON k.order_date = c.session_date
 ORDER BY k.order_date;
+
+#Business insights
+#Revenue drops with stable visits → conversion problem
+#Stable conversion with falling revenue → AOV or pricing issue
+#Rising conversion but flat revenue → low-value orders
+#Business action
+#Use this table as a weekly performance diagnostic to decide whether to focus on: UX & checkout improvements , pricing, bundling, or promotions
+
 
 
