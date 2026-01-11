@@ -1,3 +1,4 @@
+#Computes overall stage totals and drop-off % between consecutive stages.
 WITH stage_totals AS (
   SELECT
     stage,
@@ -50,8 +51,7 @@ ORDER BY
   END;
 
 
-  
-
+#Returns the single funnel step with the maximum drop-off.
 WITH stage_totals AS (
     SELECT
         stage,
@@ -90,7 +90,7 @@ FROM calc
 WHERE prev_stage IS NOT NULL
 ORDER BY dropoff_pct DESC;
 
-
+#Calculates daily conversion rate from visited sessions to purchase sessions.
 WITH daily AS (
   SELECT
     session_date,
@@ -105,4 +105,5 @@ SELECT
   purchase_sessions,
   ROUND(100.0 * purchase_sessions / NULLIF(visited_sessions, 0), 2) AS visit_to_purchase_cvr_pct
 FROM daily
+
 ORDER BY session_date;
