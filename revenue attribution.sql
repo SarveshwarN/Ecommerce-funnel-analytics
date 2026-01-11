@@ -50,13 +50,21 @@ WHERE product_id IS NOT NULL
 GROUP BY product_id
 ORDER BY revenue DESC;
 
-
+#Splits revenue into mapped vs unmapped product_id
+#Quantifies how much revenue lacks product attribution
+#Calculates % contribution of each bucket
 SELECT
     CASE WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT' ELSE 'MAPPED_PRODUCT' END AS product_mapping,
     SUM(gross_sales_usd) AS revenue,
     ROUND(100.0 * SUM(gross_sales_usd) / NULLIF(SUM(SUM(gross_sales_usd)) OVER (), 0), 2) AS revenue_share_pct
 FROM gold.product_sales_daily
 GROUP BY CASE WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT' ELSE 'MAPPED_PRODUCT' END;
+#Business insights
+100% of revenue is unmapped to product_id, meaning product-level merchandising decisions cannot be made reliably.
+Any “top products” or “category contribution” analysis would be misleading.
+Business action
+Treat product attribution as a top analytics instrumentation priority (ensure purchase events always carry product_id).
+Until fixed, avoid product-level decision-making based on this dataset.
 
 SELECT
   CASE WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT' ELSE 'MAPPED_PRODUCT' END AS product_mapping,
@@ -154,3 +162,4 @@ FROM kpi k
 LEFT JOIN cvr c
   ON k.order_date = c.session_date
 ORDER BY k.order_date;
+
