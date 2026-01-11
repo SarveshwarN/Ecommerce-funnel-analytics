@@ -102,6 +102,11 @@ No pipeline, Spark, or engineering logic is modified or discussed as part of thi
 * A significant share of revenue is concentrated on **peak days**, indicating reliance on campaign or spike performance.
 * **100% of purchase revenue lacks product-level attribution**, making product and category analysis unreliable.
 
+  ## Funnel Drop-off Analysis
+
+![Funnel Drop-off Comparison](screenshots/FUNNEL bar chat.png)
+
+
 ### Business Recommendations
 
 1. Prioritize **checkout friction reduction** (guest checkout, cost transparency, payment UX).
