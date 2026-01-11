@@ -1,5 +1,4 @@
-
-#Splits revenue into mapped vs unmapped product_id,Quantifies how much revenue lacks product attribution,Calculates % contribution of each bucket
+#1.Splits revenue into mapped vs unmapped product_id,Quantifies how much revenue lacks product attribution,Calculates % contribution of each bucket
 SELECT
   CASE
     WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT'
@@ -19,16 +18,18 @@ GROUP BY
     WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT'
     ELSE 'MAPPED_PRODUCT'
   END;
-Business insights:
-100% of revenue is unmapped to product_id, meaning product-level merchandising decisions cannot be made reliably.
-Any “top products” or “category contribution” analysis would be misleading.
-Business action:
-Treat product attribution as a top analytics instrumentation priority (ensure purchase events always carry product_id).
-Until fixed, avoid product-level decision-making based on this dataset.
+#Business insights:
+#100% of revenue is unmapped to product_id, meaning product-level merchandising decisions cannot be made reliably.
+#Any “top products” or “category contribution” analysis would be misleading.
+#Business action:
+#Treat product attribution as a top analytics instrumentation priority (ensure purchase events always carry product_id).
+#Until fixed, avoid product-level decision-making based on this dataset.
 
 
 
-#Ranks days by revenue. Computes how much revenue is driven by the top 20% of days. Measures temporal revenue concentration.
+  
+
+#2.Ranks days by revenue. Computes how much revenue is driven by the top 20% of days. Measures temporal revenue concentration.
 WITH d AS (
   SELECT
     order_date,
@@ -58,7 +59,11 @@ FROM top_days;
 #Business action
 #concentration is high: reduce dependence on spikes by improving baseline conversion.
 
-#Joins revenue KPIs with funnel conversion. Shows whether revenue changes are driven by traffic,conversion, order value (AOV).
+
+
+  
+
+#3.Joins revenue KPIs with funnel conversion. Shows whether revenue changes are driven by traffic,conversion, order value (AOV).
 WITH kpi AS (
   SELECT
     order_date,
@@ -98,6 +103,7 @@ ORDER BY k.order_date;
 #Rising conversion but flat revenue → low-value orders
 #Business action
 #Use this table as a weekly performance diagnostic to decide whether to focus on: UX & checkout improvements , pricing, bundling, or promotions
+
 
 
 
