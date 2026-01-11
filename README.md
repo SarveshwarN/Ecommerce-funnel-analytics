@@ -102,7 +102,6 @@ No pipeline, Spark, or engineering logic is modified or discussed as part of thi
 * A significant share of revenue is concentrated on **peak days**, indicating reliance on campaign or spike performance.
 * **100% of purchase revenue lacks product-level attribution**, making product and category analysis unreliable.
 
-  ## Funnel Drop-off Analysis
 
 ![Funnel Drop-off Comparison](https://github.com/SarveshwarN/Ecommerce-funnel-analytics/blob/main/screenshot%20funnel%20comparison.png?raw=true)
 
