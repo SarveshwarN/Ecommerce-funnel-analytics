@@ -1,87 +1,5 @@
-SELECT
-  c.COLUMN_NAME
-FROM INFORMATION_SCHEMA.COLUMNS c
-WHERE c.TABLE_SCHEMA = 'silver'
-  AND c.TABLE_NAME = 'products'
-ORDER BY c.ORDINAL_POSITION;
-
-
-SELECT
-  c.COLUMN_NAME
-FROM INFORMATION_SCHEMA.COLUMNS c
-WHERE c.TABLE_SCHEMA = 'gold'
-  AND c.TABLE_NAME = 'product_sales_daily'
-ORDER BY c.ORDINAL_POSITION;
-
-SELECT TOP (20)
-    product_id,
-    MAX(title) AS title,
-    MAX(category) AS category,
-    SUM(gross_sales_usd) AS revenue,
-    SUM(qty) AS units
-FROM gold.product_sales_daily
-WHERE product_id IS NOT NULL
-GROUP BY product_id
-ORDER BY revenue DESC;
-
-
-SELECT TOP (20) *
-FROM gold.product_sales_daily
-WHERE product_id IS NOT NULL
-  AND (title IS NULL OR category IS NULL);
-
-
-SELECT
-    COUNT(*) AS rows_unmapped,
-    SUM(gross_sales_usd) AS revenue_unmapped,
-    SUM(qty) AS units_unmapped
-FROM gold.product_sales_daily
-WHERE product_id IS NULL;
-
-
-SELECT TOP (20)
-    product_id,
-    COALESCE(MAX(title), 'Unknown Title') AS title,
-    COALESCE(MAX(category), 'Unknown Category') AS category,
-    SUM(gross_sales_usd) AS revenue,
-    SUM(qty) AS units
-FROM gold.product_sales_daily
-WHERE product_id IS NOT NULL
-GROUP BY product_id
-ORDER BY revenue DESC;
 
 #Splits revenue into mapped vs unmapped product_id,Quantifies how much revenue lacks product attribution,Calculates % contribution of each bucket
-SELECT
-    CASE WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT' ELSE 'MAPPED_PRODUCT' END AS product_mapping,
-    SUM(gross_sales_usd) AS revenue,
-    ROUND(100.0 * SUM(gross_sales_usd) / NULLIF(SUM(SUM(gross_sales_usd)) OVER (), 0), 2) AS revenue_share_pct
-FROM gold.product_sales_daily
-GROUP BY CASE WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT' ELSE 'MAPPED_PRODUCT' END;
-#(Business insights
-100% of revenue is unmapped to product_id, meaning product-level merchandising decisions cannot be made reliably.
-Any “top products” or “category contribution” analysis would be misleading.
-Business action
-Treat product attribution as a top analytics instrumentation priority (ensure purchase events always carry product_id).
-Until fixed, avoid product-level decision-making based on this dataset.)
-
-SELECT
-  CASE WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT' ELSE 'MAPPED_PRODUCT' END AS product_mapping,
-  COUNT(*) AS rows,
-  SUM(gross_sales_usd) AS revenue,
-  ROUND(
-    100.0 * SUM(gross_sales_usd) / NULLIF(SUM(SUM(gross_sales_usd)) OVER (), 0),
-    2
-  ) AS revenue_share_pct
-FROM gold.product_sales_daily
-GROUP BY CASE WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT' ELSE 'MAPPED_PRODUCT' END;
-
-SELECT
-  SUM(CASE WHEN title IS NULL THEN 1 ELSE 0 END) AS null_title_rows,
-  SUM(CASE WHEN category IS NULL THEN 1 ELSE 0 END) AS null_category_rows,
-  COUNT(*) AS total_rows
-FROM gold.product_sales_daily;
-
-
 SELECT
   CASE
     WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT'
@@ -101,6 +19,12 @@ GROUP BY
     WHEN product_id IS NULL THEN 'UNMAPPED_PRODUCT'
     ELSE 'MAPPED_PRODUCT'
   END;
+Business insights:
+100% of revenue is unmapped to product_id, meaning product-level merchandising decisions cannot be made reliably.
+Any “top products” or “category contribution” analysis would be misleading.
+Business action:
+Treat product attribution as a top analytics instrumentation priority (ensure purchase events always carry product_id).
+Until fixed, avoid product-level decision-making based on this dataset.
 
 
 
@@ -174,6 +98,7 @@ ORDER BY k.order_date;
 #Rising conversion but flat revenue → low-value orders
 #Business action
 #Use this table as a weekly performance diagnostic to decide whether to focus on: UX & checkout improvements , pricing, bundling, or promotions
+
 
 
 
