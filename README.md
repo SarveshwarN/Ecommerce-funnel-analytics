@@ -104,7 +104,7 @@ No pipeline, Spark, or engineering logic is modified or discussed as part of thi
 
   ## Funnel Drop-off Analysis
 
-![Funnel Drop-off Comparison](Pictures/Screenshots/FUNNEL bar chat.png)
+![Funnel Drop-off Comparison](https://github.com/SarveshwarN/Ecommerce-funnel-analytics/blob/main/FUNNEL%20bar%20chat.png?raw=true)
 
 
 ### Business Recommendations
