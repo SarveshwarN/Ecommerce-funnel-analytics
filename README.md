@@ -114,6 +114,9 @@ No pipeline, Spark, or engineering logic is modified or discussed as part of thi
 4. Strengthen baseline conversion to reduce dependency on peak-day revenue spikes.
 
 ---
+## Dashboard
+<img width="2000" height="1140" alt="image" src="https://github.com/user-attachments/assets/eea11bfa-5bef-42cb-8cda-7a2d2db5d436" />
+
 
 ## Next Steps
 
